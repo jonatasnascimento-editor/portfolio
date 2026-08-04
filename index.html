@@ -273,6 +273,48 @@
     z-index:2;
   }
 
+  .reel-scrub{
+    -webkit-appearance:none;
+    appearance:none;
+    position:absolute;
+    left:16px;right:16px;
+    bottom:38px;
+    width:calc(100% - 32px);
+    height:3px;
+    border-radius:2px;
+    background:rgba(232,220,196,0.18);
+    outline:none;
+    z-index:2;
+    cursor:pointer;
+  }
+  .reel-scrub::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:11px;height:11px;
+    border-radius:50%;
+    background:var(--amber);
+    border:2px solid var(--ink);
+    box-shadow:0 0 0 1px var(--amber);
+    cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .reel-scrub::-webkit-slider-thumb:hover{transform:scale(1.2);}
+  .reel-scrub::-moz-range-thumb{
+    width:11px;height:11px;
+    border-radius:50%;
+    background:var(--amber);
+    border:2px solid var(--ink);
+    box-shadow:0 0 0 1px var(--amber);
+    cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .reel-scrub::-moz-range-thumb:hover{transform:scale(1.2);}
+  .reel-scrub::-moz-range-track{
+    height:3px;
+    border-radius:2px;
+    background:transparent;
+  }
+
   /* ===== Section heading pattern (timecode style) ===== */
   .sec-head{
     display:flex;
@@ -716,6 +758,7 @@
       <div class="play-btn" id="heroPlay" role="button" aria-label="Toggle sound" tabindex="0">
         <svg id="heroPlayIcon" width="16" height="16" viewBox="0 0 12 12"><path d="M2 1l9 5-9 5V1z"/></svg>
       </div>
+      <input type="range" id="heroScrub" class="reel-scrub" min="0" max="100" value="0" step="0.01" aria-label="Seek video">
       <div class="reel-caption">
         <span>SHOWREEL_2026.mp4</span>
         <span id="tcCounter">00:00:00:00</span>
@@ -1007,6 +1050,40 @@
       tcCounter.textContent = ['00', String(mm).padStart(2,'0'), String(ss).padStart(2,'0'), String(ff).padStart(2,'0')].join(':');
     });
     heroVideo.addEventListener('ended', ()=>{ heroPlayIcon.innerHTML = playIconPath; });
+  }
+
+  // Scrub bar: lets the viewer drag to any point in the video
+  const heroScrub = document.getElementById('heroScrub');
+  let isScrubbing = false;
+
+  function paintScrub(){
+    const pct = heroScrub.max > 0 ? (heroScrub.value / heroScrub.max) * 100 : 0;
+    heroScrub.style.background = `linear-gradient(to right, var(--amber) ${pct}%, rgba(232,220,196,0.18) ${pct}%)`;
+  }
+
+  if(heroVideo && heroScrub){
+    heroVideo.addEventListener('loadedmetadata', ()=>{
+      heroScrub.max = heroVideo.duration;
+      paintScrub();
+    });
+    heroVideo.addEventListener('timeupdate', ()=>{
+      if(!isScrubbing){
+        heroScrub.value = heroVideo.currentTime;
+        paintScrub();
+      }
+    });
+    heroScrub.addEventListener('input', ()=>{
+      isScrubbing = true;
+      heroVideo.currentTime = heroScrub.value;
+      paintScrub();
+      // Dragging the bar signals real intent to watch — unmute and play
+      if(heroVideo.muted){
+        heroVideo.muted = false;
+        heroVideo.play();
+        heroPlayIcon.innerHTML = pauseIconPath;
+      }
+    });
+    heroScrub.addEventListener('change', ()=>{ isScrubbing = false; });
   }
 
   // Slide play buttons
