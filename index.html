@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jonatas Nascimento — Video Editor</title>
+<title>Jonatas Nascimento | Video Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -94,7 +94,7 @@
     justify-content:space-between;
   }
   .logo{
-    font-family:var(--display);
+    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:19px;
     font-weight:600;
     letter-spacing:0.04em;
@@ -326,11 +326,25 @@
     justify-content:center;
     cursor:pointer;
     z-index:3;
-    transition:all .2s ease;
+    transition:all .2s ease, opacity .3s ease;
   }
   .fs-btn:hover{border-color:var(--amber);background:rgba(226,162,76,0.15);}
   .fs-btn svg{stroke:var(--sand);transition:stroke .2s ease;}
   .fs-btn:hover svg{stroke:var(--amber);}
+
+  /* Auto-hide reel controls after mouse inactivity, in and out of fullscreen */
+  .reel-frame .play-btn,
+  .reel-frame .reel-scrub,
+  .reel-frame .fs-btn{
+    opacity:1;
+    transition:opacity .3s ease;
+  }
+  .reel-frame.controls-hidden .play-btn,
+  .reel-frame.controls-hidden .reel-scrub,
+  .reel-frame.controls-hidden .fs-btn{
+    opacity:0;
+    pointer-events:none;
+  }
 
   /* ===== Section heading pattern (timecode style) ===== */
   .sec-head{
@@ -387,6 +401,19 @@
     position:relative;
   }
   .about-portrait span{opacity:.7;}
+  .about-portrait-img{
+    position:absolute;
+    inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .about-portrait-fallback{
+    align-items:center;
+    justify-content:center;
+    width:100%;height:100%;
+    text-align:center;
+  }
   .about-text p{
     color:var(--sand-dim);
     font-size:16.5px;
@@ -546,9 +573,7 @@
     color:var(--sand);
     border:1px solid var(--line);
     padding:9px 16px;
-    transition:all .2s ease;
   }
-  .chip:hover{border-color:var(--amber);color:var(--amber);}
 
   @media(max-width:640px){
     .track{grid-template-columns:1fr;gap:10px;}
@@ -760,7 +785,7 @@
     <div>
       <div class="rec-dot">REC · JONATAS NASCIMENTO · TRAVEL &amp; LIFESTYLE EDITOR</div>
       <h1>I cut travel footage until it feels like <em>being there.</em></h1>
-      <p class="sub">Full-time traveler, full-time editor. I turn raw adventure and lifestyle footage into paced, story-driven cuts — built in Adobe Premiere Pro, refined with an editor's eye for sound and rhythm.</p>
+      <p class="sub">Full-time traveler, full-time editor. I turn raw adventure and lifestyle footage into paced, story-driven cuts, built in Adobe Premiere Pro and refined with an editor's eye for sound and rhythm.</p>
       <div class="hero-cta">
         <a href="#work" class="btn btn-primary">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5V1z"/></svg>
@@ -802,11 +827,12 @@
     </div>
     <div class="about-grid">
       <div class="about-portrait">
-        <span>PORTRAIT<br>— add your photo here —</span>
+        <img src="profile.jpg" alt="Jonatas Nascimento" class="about-portrait-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="about-portrait-fallback" style="display:none;">PORTRAIT<br>Add your photo here</span>
       </div>
       <div class="about-text">
         <p><strong>I'm a video editor specializing in YouTube travel and adventure content.</strong> As a full-time traveler myself, I bring a real understanding of what makes travel footage feel immersive and authentic.</p>
-        <p>I've built my skills through hands-on practice with narrative structure, pacing, and sound design. I currently work in <strong>Adobe Premiere Pro</strong>, though my focus is on the craft — storytelling and polish — more than any specific tool.</p>
+        <p>I've built my skills through hands-on practice with narrative structure, pacing, and sound design. I currently work in <strong>Adobe Premiere Pro</strong>, though my focus is on the craft, storytelling and polish, more than any specific tool.</p>
         <p>I'm motivated to over-deliver on communication, revisions, and deadlines as I build my client history. If you're looking for an editor who treats your travel content with real care, I'd love to talk about your channel.</p>
         <div class="about-meta">
           <div><div class="k">Based</div><div class="v">Wherever the flight lands</div></div>
@@ -836,35 +862,35 @@
             <div class="slide-bg" style="--slide-a:rgba(91,156,147,.28);--slide-b:rgba(226,162,76,.16);"></div>
             <span class="slide-tag">PROJECT SLOT 01</span>
             <div class="slide-play"><div class="play-btn" tabindex="0" role="button" aria-label="Play project 1"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5V1z"/></svg></div></div>
-            <div class="slide-info"><h3>Patagonia — Ends of the Earth</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
+            <div class="slide-info"><h3>Patagonia: Ends of the Earth</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
           </div>
 
           <div class="slide">
             <div class="slide-bg" style="--slide-a:rgba(226,162,76,.22);--slide-b:rgba(193,97,62,.18);"></div>
             <span class="slide-tag">PROJECT SLOT 02</span>
             <div class="slide-play"><div class="play-btn" tabindex="0" role="button" aria-label="Play project 2"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5V1z"/></svg></div></div>
-            <div class="slide-info"><h3>Bali — Slow Mornings</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
+            <div class="slide-info"><h3>Bali: Slow Mornings</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
           </div>
 
           <div class="slide">
             <div class="slide-bg" style="--slide-a:rgba(91,156,147,.24);--slide-b:rgba(91,156,147,.1);"></div>
             <span class="slide-tag">PROJECT SLOT 03</span>
             <div class="slide-play"><div class="play-btn" tabindex="0" role="button" aria-label="Play project 3"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5V1z"/></svg></div></div>
-            <div class="slide-info"><h3>Iceland — Ring Road</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
+            <div class="slide-info"><h3>Iceland: Ring Road</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
           </div>
 
           <div class="slide">
             <div class="slide-bg" style="--slide-a:rgba(193,97,62,.2);--slide-b:rgba(226,162,76,.2);"></div>
             <span class="slide-tag">PROJECT SLOT 04</span>
             <div class="slide-play"><div class="play-btn" tabindex="0" role="button" aria-label="Play project 4"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5V1z"/></svg></div></div>
-            <div class="slide-info"><h3>Sahara — Overland</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
+            <div class="slide-info"><h3>Sahara: Overland</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
           </div>
 
           <div class="slide">
             <div class="slide-bg" style="--slide-a:rgba(91,156,147,.2);--slide-b:rgba(193,97,62,.14);"></div>
             <span class="slide-tag">PROJECT SLOT 05</span>
             <div class="slide-play"><div class="play-btn" tabindex="0" role="button" aria-label="Play project 5"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l9 5-9 5V1z"/></svg></div></div>
-            <div class="slide-info"><h3>Alps — Winter Light</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
+            <div class="slide-info"><h3>Alps: Winter Light</h3><p>Drop in your video link and a one-line summary: the trip, the client, your role.</p></div>
           </div>
 
         </div>
@@ -941,7 +967,7 @@
         <span class="num">02</span>
         <div class="kf"></div>
         <h3>Rough cut</h3>
-        <p>Footage is organized and assembled into a first structured pass — story and pacing first.</p>
+        <p>Footage is organized and assembled into a first structured pass, with story and pacing first.</p>
       </div>
       <div class="p-step">
         <span class="num">03</span>
@@ -973,7 +999,7 @@
       <h2>Reviews</h2>
       <span class="sec-line"></span>
     </div>
-    <div class="example-flag">⚠ Example placeholders — real client reviews will replace these</div>
+    <div class="example-flag">⚠ Example placeholders. Real client reviews will replace these</div>
     <div class="testi-grid">
       <div class="testi-card">
         <div class="mark">"</div>
@@ -999,9 +1025,9 @@
   <div class="wrap">
     <div class="contact-grid">
       <div>
-        <span class="eyebrow">00:06 — Contact</span>
+        <span class="eyebrow">00:06 Contact</span>
         <h2 style="margin-top:16px;">Have footage that needs a story?</h2>
-        <div class="coords">SEND A MESSAGE — TYPICAL REPLY WITHIN 48H</div>
+        <div class="coords">SEND A MESSAGE, TYPICAL REPLY WITHIN 48H</div>
       </div>
       <div class="contact-links">
         <a href="mailto:hello@jonatasnascimento.com" class="email-cta">
@@ -1026,11 +1052,11 @@
 </section>
 
 <footer class="wrap">
-  <div>© <span id="year"></span> Jonatas Nascimento — Video Editor</div>
+  <div>© <span id="year"></span> Jonatas Nascimento, Video Editor</div>
   <div>Edited on Adobe Premiere Pro</div>
 </footer>
 
-<div class="toast" id="toast">Reel coming soon — check back shortly</div>
+<div class="toast" id="toast">Reel coming soon. Check back shortly</div>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -1126,6 +1152,28 @@
         else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
       }
     });
+  }
+
+  // Auto-hide play button, scrub bar, and fullscreen button after 1s of no mouse activity
+  // Applies both in fullscreen and in the normal inline frame
+  if(heroFrame){
+    let hideTimer;
+    function showReelControls(){
+      heroFrame.classList.remove('controls-hidden');
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(()=> heroFrame.classList.add('controls-hidden'), 1000);
+    }
+    heroFrame.addEventListener('mousemove', showReelControls);
+    heroFrame.addEventListener('mouseenter', showReelControls);
+    heroFrame.addEventListener('mouseleave', ()=>{
+      clearTimeout(hideTimer);
+      heroFrame.classList.add('controls-hidden');
+    });
+    // Keep controls visible while actively dragging the scrub bar or focusing controls via keyboard
+    heroFrame.addEventListener('focusin', showReelControls);
+    if(heroScrub) heroScrub.addEventListener('input', showReelControls);
+    // Start hidden after the initial 1s window
+    hideTimer = setTimeout(()=> heroFrame.classList.add('controls-hidden'), 1000);
   }
 
   // Slide play buttons
