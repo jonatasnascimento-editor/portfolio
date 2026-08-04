@@ -315,6 +315,23 @@
     background:transparent;
   }
 
+  .fs-btn{
+    position:absolute;
+    top:34px;right:14px;
+    width:30px;height:30px;
+    border:1px solid var(--sand-dim);
+    background:rgba(18,23,27,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:3;
+    transition:all .2s ease;
+  }
+  .fs-btn:hover{border-color:var(--amber);background:rgba(226,162,76,0.15);}
+  .fs-btn svg{stroke:var(--sand);transition:stroke .2s ease;}
+  .fs-btn:hover svg{stroke:var(--amber);}
+
   /* ===== Section heading pattern (timecode style) ===== */
   .sec-head{
     display:flex;
@@ -332,6 +349,9 @@
   .sec-head h2{
     font-size:clamp(1.8rem,3vw,2.4rem);
     color:var(--sand);
+    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
   }
   .sec-line{
     flex:1;
@@ -759,6 +779,11 @@
         <svg id="heroPlayIcon" width="16" height="16" viewBox="0 0 12 12"><path d="M2 1l9 5-9 5V1z"/></svg>
       </div>
       <input type="range" id="heroScrub" class="reel-scrub" min="0" max="100" value="0" step="0.01" aria-label="Seek video">
+      <button class="fs-btn" id="heroFullscreen" aria-label="Toggle fullscreen" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/>
+        </svg>
+      </button>
       <div class="reel-caption">
         <span>SHOWREEL_2026.mp4</span>
         <span id="tcCounter">00:00:00:00</span>
@@ -1084,6 +1109,23 @@
       }
     });
     heroScrub.addEventListener('change', ()=>{ isScrubbing = false; });
+  }
+
+  // Fullscreen toggle — fullscreens the whole reel frame (keeps play button, scrub bar, caption visible)
+  const heroFullscreen = document.getElementById('heroFullscreen');
+  const heroFrame = document.getElementById('heroReel');
+  if(heroFullscreen && heroFrame){
+    heroFullscreen.addEventListener('click', ()=>{
+      const fsElement = document.fullscreenElement || document.webkitFullscreenElement;
+      if(!fsElement){
+        if(heroFrame.requestFullscreen) heroFrame.requestFullscreen();
+        else if(heroFrame.webkitRequestFullscreen) heroFrame.webkitRequestFullscreen();
+        else if(heroVideo && heroVideo.webkitEnterFullscreen) heroVideo.webkitEnterFullscreen(); // iOS Safari fallback
+      } else {
+        if(document.exitFullscreen) document.exitFullscreen();
+        else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    });
   }
 
   // Slide play buttons
