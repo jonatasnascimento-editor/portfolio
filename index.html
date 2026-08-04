@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JONATAS NASCIMENTO — Video Editor</title>
+<title>Jonatas Nascimento — Video Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -97,7 +97,8 @@
     font-family:var(--display);
     font-size:19px;
     font-weight:600;
-    letter-spacing:0.01em;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
   }
   .logo span{color:var(--amber);}
   .nav-links{
@@ -219,11 +220,20 @@
     justify-content:center;
     overflow:hidden;
   }
+  .reel-video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:0;
+  }
   .reel-frame .corner{
     position:absolute;
     width:14px;height:14px;
     border:1px solid var(--sand-dim);
     opacity:.5;
+    z-index:2;
   }
   .corner.tl{top:14px;left:14px;border-right:none;border-bottom:none;}
   .corner.tr{top:14px;right:14px;border-left:none;border-bottom:none;}
@@ -241,6 +251,8 @@
     background:rgba(18,23,27,0.5);
     transition:all .25s ease;
     flex-shrink:0;
+    position:relative;
+    z-index:2;
   }
   .play-btn:hover{
     border-color:var(--amber);
@@ -258,6 +270,7 @@
     font-size:11px;
     color:var(--sand-dim);
     letter-spacing:.05em;
+    z-index:2;
   }
 
   /* ===== Section heading pattern (timecode style) ===== */
@@ -695,10 +708,13 @@
       </div>
     </div>
     <div class="reel-frame" id="heroReel">
+      <video id="heroVideo" class="reel-video" autoplay muted loop playsinline>
+        <source src="reel.mp4" type="video/mp4">
+      </video>
       <div class="corner tl"></div><div class="corner tr"></div>
       <div class="corner bl"></div><div class="corner br"></div>
-      <div class="play-btn" id="heroPlay" role="button" aria-label="Play showreel" tabindex="0">
-        <svg width="16" height="16" viewBox="0 0 12 12"><path d="M2 1l9 5-9 5V1z"/></svg>
+      <div class="play-btn" id="heroPlay" role="button" aria-label="Toggle sound" tabindex="0">
+        <svg id="heroPlayIcon" width="16" height="16" viewBox="0 0 12 12"><path d="M2 1l9 5-9 5V1z"/></svg>
       </div>
       <div class="reel-caption">
         <span>SHOWREEL_2026.mp4</span>
@@ -961,23 +977,37 @@
     toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2200);
   }
 
-  // Hero play + fake timecode counter
+  // Hero video: autoplays muted; play button toggles sound + real playback
   const heroPlay = document.getElementById('heroPlay');
+  const heroPlayIcon = document.getElementById('heroPlayIcon');
+  const heroVideo = document.getElementById('heroVideo');
   const tcCounter = document.getElementById('tcCounter');
-  let tcInterval = null;
-  function activateHero(){
-    if(tcInterval) return;
-    let f = 0;
-    tcInterval = setInterval(()=>{
-      f++;
-      let ff = f % 24, ss = Math.floor(f/24) % 60, mm = Math.floor(f/(24*60)) % 60;
-      tcCounter.textContent = [mm,ss,ff].map(n=>String(n).padStart(2,'0')).join(':').replace(/^/,'00:');
-      if(f > 24*8){ clearInterval(tcInterval); tcInterval=null; tcCounter.textContent='00:00:00:00'; }
-    }, 1000/24);
-    showToast('Reel coming soon — check back shortly');
+
+  const pauseIconPath = '<rect x="1" y="1" width="3.4" height="10" rx="0.5"/><rect x="7.6" y="1" width="3.4" height="10" rx="0.5"/>';
+  const playIconPath = '<path d="M2 1l9 5-9 5V1z"/>';
+
+  function toggleHero(){
+    if(heroVideo.paused || heroVideo.muted){
+      heroVideo.muted = false;
+      heroVideo.play();
+      heroPlayIcon.innerHTML = pauseIconPath;
+    } else {
+      heroVideo.pause();
+      heroPlayIcon.innerHTML = playIconPath;
+    }
   }
-  heroPlay.addEventListener('click', activateHero);
-  heroPlay.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); activateHero(); }});
+  heroPlay.addEventListener('click', toggleHero);
+  heroPlay.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleHero(); }});
+
+  // Live timecode readout synced to the video's actual playback position
+  if(heroVideo){
+    heroVideo.addEventListener('timeupdate', ()=>{
+      const t = heroVideo.currentTime;
+      const mm = Math.floor(t/60), ss = Math.floor(t%60), ff = Math.floor((t%1)*24);
+      tcCounter.textContent = ['00', String(mm).padStart(2,'0'), String(ss).padStart(2,'0'), String(ff).padStart(2,'0')].join(':');
+    });
+    heroVideo.addEventListener('ended', ()=>{ heroPlayIcon.innerHTML = playIconPath; });
+  }
 
   // Slide play buttons
   document.querySelectorAll('.slide-play .play-btn').forEach(btn=>{
