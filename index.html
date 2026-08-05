@@ -374,7 +374,7 @@
     min-width:40px;
   }
 
-  section.pad{padding:120px 0;}
+  section.pad{padding:60px 0;}
   section.pad + section.pad{border-top:1px solid var(--line);}
 
   /* ===== About ===== */
@@ -386,6 +386,8 @@
   }
   .about-portrait{
     aspect-ratio:4/5;
+    width:60%;
+    max-width:230px;
     border:1px solid var(--line);
     background:
       linear-gradient(160deg, rgba(91,156,147,0.25), rgba(18,23,27,0.9) 60%),
@@ -440,26 +442,44 @@
   }
   .about-meta .v{font-size:15px;color:var(--sand);}
 
-  /* ===== Carousel ===== */
+  /* ===== Carousel (coverflow: center slide playable, neighbors peek through) ===== */
   .carousel{
     position:relative;
   }
   .carousel-viewport{
     overflow:hidden;
-    border:1px solid var(--line);
+    position:relative;
+    padding:20px 0;
   }
   .carousel-track{
     display:flex;
+    align-items:center;
+    gap:20px;
     transition:transform .55s cubic-bezier(.65,0,.35,1);
+    will-change:transform;
   }
   .slide{
-    min-width:100%;
+    flex:none;
+    width:var(--frame-w, 633px);
     aspect-ratio:16/9;
     position:relative;
     background:var(--ink-soft);
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
+    border:1px solid var(--line);
+    opacity:.4;
+    filter:saturate(.7);
+    transform:scale(.88);
+    transition:opacity .5s ease, transform .5s ease, filter .5s ease;
+    pointer-events:none;
+  }
+  .slide.active{
+    opacity:1;
+    filter:none;
+    transform:scale(1);
+    pointer-events:auto;
+    border-color:var(--sand-dim);
   }
   .slide-bg{
     position:absolute;inset:0;
@@ -629,6 +649,71 @@
     .process-line::before{display:none;}
   }
 
+  /* ===== Clients (channel thumbnails) ===== */
+  .clients-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+  }
+  .client-card{
+    border:1px solid var(--line);
+    background:var(--ink-card);
+    overflow:hidden;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .client-card:hover{border-color:var(--amber);transform:translateY(-3px);}
+  .client-thumb{
+    aspect-ratio:1/1;
+    position:relative;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(91,156,147,0.22), transparent 55%),
+      radial-gradient(ellipse at 80% 85%, rgba(226,162,76,0.16), transparent 55%),
+      var(--ink-soft);
+  }
+  .client-thumb-img{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .client-thumb-fallback{
+    position:absolute;inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:14px;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.05em;
+    color:var(--sand-dim);
+  }
+  .client-info{
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .client-info .name{
+    font-size:14px;
+    color:var(--sand);
+    font-weight:500;
+  }
+  .client-info .subs{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--teal);
+    letter-spacing:.04em;
+    white-space:nowrap;
+  }
+  @media(max-width:900px){
+    .clients-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:520px){
+    .clients-grid{grid-template-columns:1fr;}
+  }
+
   /* ===== Testimonials ===== */
   .example-flag{
     font-family:var(--mono);
@@ -772,7 +857,7 @@
       <a href="#about"><span class="tc">00:01</span>About</a>
       <a href="#work"><span class="tc">00:02</span>Work</a>
       <a href="#skills"><span class="tc">00:03</span>Skills</a>
-      <a href="#process"><span class="tc">00:04</span>Process</a>
+      <a href="#clients"><span class="tc">00:04</span>Clients</a>
       <a href="#reviews"><span class="tc">00:05</span>Reviews</a>
       <a href="#contact"><span class="tc">00:06</span>Contact</a>
     </div>
@@ -948,44 +1033,43 @@
   </div>
 </section>
 
-<!-- ============ PROCESS ============ -->
-<section class="pad" id="process">
+<!-- ============ CLIENTS ============ -->
+<section class="pad" id="clients">
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tc">00:04</span>
-      <h2>How We'd Work Together</h2>
+      <h2>My Clients</h2>
       <span class="sec-line"></span>
     </div>
-    <div class="process-line">
-      <div class="p-step">
-        <span class="num">01</span>
-        <div class="kf"></div>
-        <h3>Discovery call</h3>
-        <p>We talk about your channel, your footage, and what the finished video needs to do.</p>
+    <div class="example-flag">⚠ Example placeholders. Replace with the real channels you've edited for</div>
+    <div class="clients-grid">
+      <div class="client-card">
+        <div class="client-thumb">
+          <img src="clients/channel-01.jpg" alt="Channel thumbnail" class="client-thumb-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="client-thumb-fallback" style="display:none;">CHANNEL THUMB<br>Add logo/thumbnail</span>
+        </div>
+        <div class="client-info"><span class="name">Wander North</span><span class="subs">210K subs</span></div>
       </div>
-      <div class="p-step">
-        <span class="num">02</span>
-        <div class="kf"></div>
-        <h3>Rough cut</h3>
-        <p>Footage is organized and assembled into a first structured pass, with story and pacing first.</p>
+      <div class="client-card">
+        <div class="client-thumb">
+          <img src="clients/channel-02.jpg" alt="Channel thumbnail" class="client-thumb-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="client-thumb-fallback" style="display:none;">CHANNEL THUMB<br>Add logo/thumbnail</span>
+        </div>
+        <div class="client-info"><span class="name">Two Bags One Trip</span><span class="subs">88K subs</span></div>
       </div>
-      <div class="p-step">
-        <span class="num">03</span>
-        <div class="kf"></div>
-        <h3>Feedback</h3>
-        <p>You review and share notes. Clear rounds, no scope surprises.</p>
+      <div class="client-card">
+        <div class="client-thumb">
+          <img src="clients/channel-03.jpg" alt="Channel thumbnail" class="client-thumb-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="client-thumb-fallback" style="display:none;">CHANNEL THUMB<br>Add logo/thumbnail</span>
+        </div>
+        <div class="client-info"><span class="name">Lena Explores</span><span class="subs">54K subs</span></div>
       </div>
-      <div class="p-step">
-        <span class="num">04</span>
-        <div class="kf"></div>
-        <h3>Final polish</h3>
-        <p>Color, sound design, and pacing refined until the cut feels right.</p>
-      </div>
-      <div class="p-step">
-        <span class="num">05</span>
-        <div class="kf"></div>
-        <h3>Delivery</h3>
-        <p>Export in the format you need, on the deadline we agreed on.</p>
+      <div class="client-card">
+        <div class="client-thumb">
+          <img src="clients/channel-04.jpg" alt="Channel thumbnail" class="client-thumb-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="client-thumb-fallback" style="display:none;">CHANNEL THUMB<br>Add logo/thumbnail</span>
+        </div>
+        <div class="client-info"><span class="name">Overland Diego</span><span class="subs">132K subs</span></div>
       </div>
     </div>
   </div>
@@ -1182,12 +1266,15 @@
     btn.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showToast('Add your video to this slot'); }});
   });
 
-  // Carousel
+  // Carousel (coverflow: center slide full-size & playable, neighbors peek with opacity)
+  const carouselViewport = document.querySelector('.carousel-viewport');
   const track = document.getElementById('track');
-  const slides = track.children.length;
+  const slideEls = [...track.children];
+  const slides = slideEls.length;
   const dotsWrap = document.getElementById('dots');
   const slideNum = document.getElementById('slideNum');
   let idx = 0;
+  const GAP = 20; // must match .carousel-track gap
 
   for(let i=0;i<slides;i++){
     const d = document.createElement('div');
@@ -1197,15 +1284,41 @@
   }
   const dots = dotsWrap.children;
 
+  slideEls.forEach((s,n)=> s.addEventListener('click', (e)=>{
+    if(n!==idx){ e.stopPropagation(); go(n); }
+  }));
+
+  // Frame size = 1/3 bigger than the hero reel frame's rendered width
+  function syncFrameWidth(){
+    if(!heroFrame) return;
+    const heroW = heroFrame.getBoundingClientRect().width;
+    let frameW = heroW * (4/3);
+    // never let a slide be wider than the viewport allows for a nice peek on both sides
+    const viewportW = carouselViewport.getBoundingClientRect().width;
+    const maxFrameW = viewportW * 0.82;
+    frameW = Math.min(frameW, maxFrameW);
+    document.documentElement.style.setProperty('--frame-w', frameW + 'px');
+    return frameW;
+  }
+
   function go(i){
     idx = (i + slides) % slides;
-    track.style.transform = `translateX(-${idx*100}%)`;
+    const frameW = syncFrameWidth() || track.children[0].getBoundingClientRect().width;
+    const viewportW = carouselViewport.getBoundingClientRect().width;
+    const step = frameW + GAP;
+    const centerOfActive = idx*step + frameW/2;
+    const offset = viewportW/2 - centerOfActive;
+    track.style.transform = `translateX(${offset}px)`;
+    slideEls.forEach((s,n)=> s.classList.toggle('active', n===idx));
     [...dots].forEach((d,n)=> d.classList.toggle('active', n===idx));
     slideNum.textContent = String(idx+1).padStart(2,'0');
   }
 
   document.getElementById('prevBtn').addEventListener('click', ()=> go(idx-1));
   document.getElementById('nextBtn').addEventListener('click', ()=> go(idx+1));
+  window.addEventListener('resize', ()=> go(idx));
+  window.addEventListener('load', ()=> go(idx));
+  go(0);
 
   // keyboard arrows when carousel in view
   document.addEventListener('keydown', e=>{
